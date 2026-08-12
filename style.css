@@ -40,6 +40,45 @@ body {
 .search-section {
   margin: 30px 0;
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+form.search-form {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: white;
+  font-weight: 500;
+}
+
+form.search-form input {
+  border: none;
+  width: 100%;
+  padding: 16px;
+  font: inherit;
+  outline: none;
+}
+
+form.search-form button {
+  background: #ff003b;
+  color: #fff;
+  border: none;
+  padding: 20px 24px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+form.search-form button:hover {
+  background-color: #9e0025;
 }
 
 .search-section select {
@@ -113,7 +152,7 @@ body {
 
 .chat-form button {
   font-size: 18px;
-  background: #000;
+  background: #ff003b;
   color: #fff;
   border: none;
   padding: 12px;
@@ -186,6 +225,18 @@ body {
   display: flex;
   gap: 15px;
   min-height: 160px;
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.product-card.selected {
+  border-color: #000;
+  background-color: #ff003b;
+}
+
+.product-card.selected h3,
+.product-card.selected p {
+  color: #f0f0f0;
 }
 
 .product-card img {
@@ -229,7 +280,36 @@ body {
 #selectedProductsList {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5px;
+}
+
+.selected-product-card {
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 4px;
+  display: flex;
+  gap: 5px;
+  min-height: 100px;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+}
+
+.selected-product-card img {
+  width: 80px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.selected-product-card h3 {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.selected-product-card p {
+  font-size: 12px;
+  color: #666;
 }
 
 .generate-btn {
@@ -239,17 +319,61 @@ body {
   font-size: 18px;
   font-weight: 500;
   color: #fff;
-  background: #000;
+  background: #ff003b;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .generate-btn:hover {
-  background: #666;
+  background: #9e0025;
+  transform: scale(1.02);
 }
 
 .generate-btn i {
   margin-right: 8px;
+}
+
+#sendBtn {
+  background-color: #ff003b;
+}
+
+#sendBtn:hover {
+  background-color: #9e0025;
+}
+
+
+/* RTL Text Direction */
+html[dir="rtl"], body.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] .hero,
+body.rtl .hero {
+  text-align: right;
+}
+
+html[dir="rtl"] .timeline-card,
+body.rtl .timeline-card,
+html[dir="rtl"] .card-body,
+body.rtl .card-body,
+html[dir="rtl"] .form-check,
+body.rtl .form-check {
+  text-align: right;
+}
+
+body.rtl .timeline {
+  direction: ltr;
+}
+
+body.rtl .form-check-input {
+  float: right;
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+body.rtl .btn {
+  direction: ltr;
 }

@@ -25,6 +25,21 @@
 
       <!-- Category Filter -->
       <div class="search-section">
+        <form id="searchForm" class="search-form">
+          <label for="searchInput" class="visually-hidden">Search Products</label>
+          <input
+            id="searchInput"
+            name="searchInput"
+            type="text"
+            placeholder="Search products..."
+            autocomplete="off"
+          />
+          <button type="submit" id="searchBtn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span class="visually-hidden">Search</span>
+          </button>
+
+        </form>
         <select id="categoryFilter">
           <option value="" disabled selected>Choose a Category</option>
           <option value="cleanser">Cleansers</option>
@@ -43,10 +58,10 @@
       <div id="productsContainer" class="products-grid"></div>
 
       <!-- Selected Products -->
-      <div class="selected-products">
+      <div class="selected-products" id="selectedProductsContainer">
         <h2>Selected Products</h2>
         <div id="selectedProductsList"></div>
-        <button id="generateRoutine" class="generate-btn">
+        <button id="generateRoutine" class="generate-btn" type="submit">
           <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Routine
         </button>
       </div>
@@ -86,5 +101,49 @@
     </div>
 
     <script src="script.js"></script>
+
+    <!-- RTL Text Direction Script-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      (function() {
+        const rtlLanguages = new Set([
+          'ar', 'he', 'fa', 'ur', 'ps', 'sd', 'ks', 'ku', 'yi', 'ug', 'dv', 'nqo', 'syr', 'azb', 'ckb'
+        ]);
+
+        function isRtlLanguage(value) {
+          if (!value) return false;
+          const lang = value.split(/[-_]/)[0].toLowerCase();
+          return rtlLanguages.has(lang);
+        }
+
+        function detectTranslateLanguage() {
+          const htmlLang = document.documentElement.lang;
+          if (isRtlLanguage(htmlLang)) return true;
+
+          const translateSelect = document.querySelector('.goog-te-combo');
+          if (translateSelect && isRtlLanguage(translateSelect.value)) return true;
+
+          const metaLang = document.querySelector('meta[http-equiv="content-language"]');
+          if (metaLang && isRtlLanguage(metaLang.content)) return true;
+
+          return false;
+        }
+
+        function updateDirection() {
+          const isRtl = detectTranslateLanguage();
+          document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+        }
+
+        function observeLanguageChanges() {
+          const observer = new MutationObserver(() => updateDirection());
+          observer.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+          observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['lang'] });
+        }
+
+        updateDirection();
+        observeLanguageChanges();
+        setInterval(updateDirection, 1000);
+      })();
+    </script>
   </body>
 </html>

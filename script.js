@@ -1,6 +1,7 @@
 /* Get references to DOM elements */
 const categoryFilter = document.getElementById("categoryFilter");
 const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("searchInput");
 const productsContainer = document.getElementById("productsContainer");
 const generateRoutine = document.getElementById("generateRoutine");
 const selectedProductsList = document.getElementById("selectedProductsList");
@@ -138,35 +139,47 @@ function renderSelectedProducts() {
   updateGenerateRoutineButtonState(); // Calls the function to update the state of the "Generate Routine" button based on whether any products are selected
 }
 
+// Filter products using the current search text and selected category.
+function filterAndDisplayProducts() {
+  const searchQuery = searchInput.value.trim().toLowerCase();
+  const selectedCategory = categoryFilter.value;
+
+  const filteredProducts = allProducts.filter((product) => {
+    const matchesSearch =
+      searchQuery === "" ||
+      product.name.toLowerCase().includes(searchQuery) ||
+      product.brand.toLowerCase().includes(searchQuery);
+    const matchesCategory =
+      selectedCategory === "" || product.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  displayProducts(filteredProducts);
+}
+
 // Handle search form submission. Filters products based on the search query and selected category.
 searchForm.addEventListener("submit", async (e) => {
   e.preventDefault(); // Prevent the default form submission behavior to avoid page reload
 
-  if(!document.getElementById("searchInput").value.trim()) {
+  if (!searchInput.value.trim()) {
     alert("Please enter a search query before searching.");
     return;
   }
 
-  if(!categoryFilter.value) {
+  if (!categoryFilter.value) {
     alert("Please select a category before searching.");
     return;
   }
-  
-  const searchQuery = document.getElementById("searchInput").value.toLowerCase(); // Get the search query and convert it to lowercase for case-insensitive matching
-  const selectedCategory = categoryFilter.value; // Get the selected category from the dropdown
-  const products = await loadProducts(); // Load the products from the JSON file
+
   searchForm.querySelector("button").disabled = true; // Disable the search button to prevent multiple submissions while processing
-
-  // Filter products based on the search query and selected category. The filter() method creates a new array containing only products that match the search query and category.
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery) || product.brand.toLowerCase().includes(searchQuery); // Check if the product name or brand includes the search query
-    const matchesCategory = selectedCategory === "" || product.category === selectedCategory; // Check if the product category matches the selected category or if no category is selected (empty string)
-    return matchesSearch && matchesCategory;
-  });
-
-  displayProducts(filteredProducts); // Call the displayProducts function to update the UI with the filtered products
-  searchForm.reset(); // Reset the search form to clear the input field after submission
+  filterAndDisplayProducts();
   searchForm.querySelector("button").disabled = false; // Re-enable the search button after processing is complete
+});
+
+// Filter products as the user types in the search bar.
+searchInput.addEventListener("input", () => {
+  filterAndDisplayProducts();
 });
 
 /* Create HTML for displaying product cards */
@@ -223,16 +236,7 @@ selectedProductsList.addEventListener("click", (e) => {
 
 /* Filter and display products when category changes */
 categoryFilter.addEventListener("change", async (e) => {
-  const products = await loadProducts();
-  const selectedCategory = e.target.value;
-
-  /* filter() creates a new array containing only products 
-     where the category matches what the user selected */
-  const filteredProducts = products.filter(
-    (product) => product.category === selectedCategory
-  );
-
-  displayProducts(filteredProducts);
+  filterAndDisplayProducts();
   renderSelectedProducts();
 });
 
